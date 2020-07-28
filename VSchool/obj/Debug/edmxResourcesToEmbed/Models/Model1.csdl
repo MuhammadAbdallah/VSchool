@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Gender">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Students" Relationship="Self.FK_Students_Gender" FromRole="Gender" ToRole="Students" />
+  </EntityType>
+  <EntityType Name="StudentGrade">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StudentId" Type="Int32" Nullable="false" />
+    <Property Name="SubjectId" Type="Int32" Nullable="false" />
+    <Property Name="Degree" Type="Double" Nullable="false" />
+    <NavigationProperty Name="Student" Relationship="Self.FK_StudentGrades_Students" FromRole="StudentGrades" ToRole="Students" />
+    <NavigationProperty Name="Subject" Relationship="Self.FK_StudentGrades_Subjects" FromRole="StudentGrades" ToRole="Subjects" />
+  </EntityType>
+  <EntityType Name="Student">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Genderd" Type="Int32" />
+    <Property Name="Photo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Gender" Relationship="Self.FK_Students_Gender" FromRole="Students" ToRole="Gender" />
+    <NavigationProperty Name="StudentGrades" Relationship="Self.FK_StudentGrades_Students" FromRole="Students" ToRole="StudentGrades" />
+  </EntityType>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="StudentGrades" Relationship="Self.FK_StudentGrades_Subjects" FromRole="Subjects" ToRole="StudentGrades" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK_Students_Gender">
+    <End Role="Gender" Type="Self.Gender" Multiplicity="0..1" />
+    <End Role="Students" Type="Self.Student" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Gender">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Students">
+        <PropertyRef Name="Genderd" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentGrades_Students">
+    <End Role="Students" Type="Self.Student" Multiplicity="1" />
+    <End Role="StudentGrades" Type="Self.StudentGrade" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StudentGrades">
+        <PropertyRef Name="StudentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentGrades_Subjects">
+    <End Role="Subjects" Type="Self.Subject" Multiplicity="1" />
+    <End Role="StudentGrades" Type="Self.StudentGrade" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="StudentGrades">
+        <PropertyRef Name="SubjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="TestEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Genders" EntityType="Self.Gender" />
+    <EntitySet Name="StudentGrades" EntityType="Self.StudentGrade" />
+    <EntitySet Name="Students" EntityType="Self.Student" />
+    <EntitySet Name="Subjects" EntityType="Self.Subject" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FK_Students_Gender" Association="Self.FK_Students_Gender">
+      <End Role="Gender" EntitySet="Genders" />
+      <End Role="Students" EntitySet="Students" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentGrades_Students" Association="Self.FK_StudentGrades_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="StudentGrades" EntitySet="StudentGrades" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentGrades_Subjects" Association="Self.FK_StudentGrades_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="StudentGrades" EntitySet="StudentGrades" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

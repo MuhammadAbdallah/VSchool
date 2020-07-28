@@ -1,0 +1,90 @@
+﻿@model IEnumerable<VSchool.Models.StudentGrade>
+@{
+    ViewBag.Title = "Grades";
+}
+<div class="jumbotron text-center">
+    <h1>Students Grades</h1>
+</div>
+<div>
+    <a class="btn btn-success" onclick="SubmitDegree()" style="margin-bottom:10px;">Submit Degree</a>
+</div>
+<hr />
+<div class="row" style="margin:15px;">
+    <div class="col-sm-11">
+        <div class="input-group">
+            <input type="text" class="form-control " id="student-name" placeholder="Student Name">
+            <div class="input-group-btn">
+                <button class=" form-control btn btn-primary" onclick="SearchGrade('search')">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-1">
+        
+            <button class=" form-control btn btn-primary" onclick="SearchGrade('refresh')"><span class="glyphicon glyphicon-refresh"></span></button>
+        
+    </div>
+
+</div>
+<hr />
+
+
+
+<div class="student-degree-section">
+    @{ Html.RenderAction("SearchDegree", "StudentsGrades");}
+</div>
+
+<script>
+
+    var SubmitDegree = function () {
+        $("#my-modal").modal("toggle");
+        $("#my-modal .modal-title").html("Submit Degree");
+        $("#my-modal .modal-footer").remove();
+        $("#my-modal .modal-body").load("/StudentsGrades/SubmitDegree");
+    }
+
+    var SearchGrade = function (keyword) {
+        if (keyword == "search") {
+            var studentName = $("#student-name").val();
+            var subjectName = $("#subject-name").val();
+        } else {
+            var studentName = null;
+            var subjectName = null;
+            $("#student-name").val("");
+            $("#subject-name").val("");
+        }
+
+         $.ajax({
+
+                type: "GET",
+                url: '@Url.Action("SearchDegree", "StudentsGrades")',
+                data: { "studentName": studentName, "subjectName": subjectName },
+                context:this,
+                success: function (data) {
+                    $(".student-degree-section").empty();
+                    $(".student-degree-section").append(data);
+                }
+            })
+    }
+
+    var Edit = function (id) {
+        $("#my-modal").modal("toggle");
+        $("#my-modal .modal-title").html("Edite Student Grade");
+        $("#my-modal .modal-footer").remove();
+        $("#my-modal .modal-body").load("/StudentsGrades/Edit/"+id);
+    }
+    var Delete = function (id) {
+        $("#my-modal").modal("toggle");
+        $("#my-modal .modal-title").html("Delete");
+        $("#my-modal .modal-body").html("Are you sue you want to delete?");
+
+        $("#my-modal .modal-footer").remove();
+        $("#my-modal .modal-content").append(
+            '<div class="modal-footer">' +
+                '<div>' +
+                    '<a class="btn btn-danger" href="/StudentsGrades/Delete/' + id + '">Delete</a>' +
+                    '<button class="btn btn-primary" data-dismiss="modal">Close</button>' +
+                '</div>' +
+            '</div>')
+    }
+</script>
+

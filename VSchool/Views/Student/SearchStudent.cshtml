@@ -1,0 +1,39 @@
+﻿
+@{
+                /**/
+
+                ViewBag.Title = "SearchStudent";
+                Layout = null;
+}
+
+<div style="margin:auto">
+<table class="table" style="margin:auto;">
+    <thead>
+        <tr>
+            <th class="col-sm-3">Name </th>
+            <th class="col-sm-3">Email</th>
+            <th class="col-sm-3">Photo</th>
+            <th class="col-sm-1">Gender</th>
+            <th class="col-sm-2"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Name</td>
+                <td>@student.Email</td>
+                <td><img src="../UploadFiles/StudentImage/@student.Photo" class="img-responsive" width="80" height="40" /></td>
+                <td>@(student.Genderd == 1 ? "Male" : "Female")</td>
+
+                <td>
+
+                    <a class="btn btn-primary" onclick="EditStudent(@student.Id)">Edit</a>
+                    <a class="btn btn-danger" onclick="DeleteStudent(@student.Id)">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+</div>
